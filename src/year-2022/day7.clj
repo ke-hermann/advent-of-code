@@ -1,27 +1,29 @@
 (ns year-2022.day7
   (:require [clojure.string :as s]))
 
-(defn list-dirs [coll]
-  (take-while #(not= \$ (first %)) coll))
+(defn list-contents [folder]
+  (->> (take-while #(not= \$ (first %)) folder)
+       (mapcat #(re-seq #"\d+" %))
+       (map #(Integer/parseInt %))))
 
 (defn execute-commands [instructions]
-  (loop [state {} dir [] xs instructions]
-    (if (empty? xs)
-      state
-      (let [[hd & tl] xs
+  (loop [folders {} path [] command instructions]
+    (if (empty? command)
+      folders
+      (let [[hd & tl] command
             [x y z] (s/split hd  #"\s+")]
         (cond
           (= hd "$ cd /")
-          (recur state ["/"] tl)
+          (recur folders ["/"] tl)
           (= hd "$ ls")
-          (recur (assoc state dir (list-dirs tl))
-                 dir
+          (recur (assoc folders path (list-contents tl))
+                 path
                  (drop-while #(not= (first %) \$) tl))
           (= hd "$ cd ..")
-          (recur state
-                 (vec (butlast dir))
+          (recur folders
+                 (vec (butlast path))
                  tl)
-          (= [x y] ["$" "cd"]) (recur state (conj dir z) tl))))))
+          (= [x y] ["$" "cd"]) (recur folders (conj path z) tl))))))
 
 (def filesystem (->> (slurp "resources/2022/day7.txt")
                      (s/split-lines)
@@ -29,14 +31,13 @@
 
 (def all-folders (map first filesystem))
 
+(defn subfolder? [dir [k _]]
+  (= dir (take (count dir) k)))
+
 (defn total-size [dir]
-  (let [l (count dir)
-        dirs (filter (fn [[k v]] (= dir (take l k))) filesystem)
-        contents (mapcat second dirs)
-        files (remove #(.contains % "dir") contents)
-        weights (map #(first (s/split % #"\s+")) files)]
-    (->> (map #(Integer/parseInt %) weights)
-         (reduce +))))
+  (let [dirs (filter (partial subfolder? dir) filesystem)
+        weights (mapcat second dirs)]
+    (reduce + weights)))
 
 (defn part-1 []
   (->> (map total-size all-folders)
