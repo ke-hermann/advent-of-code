@@ -1,10 +1,11 @@
 (ns year-2022.day7
   (:require [clojure.string :as s]))
 
-(defn list-contents [folder]
+(defn folder-size [folder]
   (->> (take-while #(not= \$ (first %)) folder)
        (mapcat #(re-seq #"\d+" %))
-       (map #(Integer/parseInt %))))
+       (map #(Integer/parseInt %))
+       (reduce +)))
 
 (defn execute-commands [instructions]
   (loop [folders {} path [] command instructions]
@@ -13,12 +14,15 @@
       (let [[hd & tl] command
             [x y z] (s/split hd  #"\s+")]
         (cond
+          ;; back to root
           (= hd "$ cd /")
           (recur folders ["/"] tl)
+          ;; list contents
           (= hd "$ ls")
-          (recur (assoc folders path (list-contents tl))
+          (recur (assoc folders path (folder-size tl))
                  path
                  (drop-while #(not= (first %) \$) tl))
+          ;; one up
           (= hd "$ cd ..")
           (recur folders
                  (vec (butlast path))
@@ -36,7 +40,7 @@
 
 (defn total-size [dir]
   (let [dirs (filter (partial subfolder? dir) filesystem)
-        weights (mapcat second dirs)]
+        weights (map second dirs)]
     (reduce + weights)))
 
 (defn part-1 []
