@@ -9,5 +9,6 @@
        (count)
        (+ i)))
 
-(find-marker 4)
-(find-marker 14)
+(defn solution []
+  (println (find-marker 4))
+  (println (find-marker 14)))
