@@ -14,7 +14,7 @@
   [matrix]
   (->> (for [x (range (count matrix))
              y (range (count (first matrix)))]
-         [[x y] (str (get (get matrix x) y ))])
+         [[x y] (Integer/parseInt (str (get (get matrix x) y )))])
        (into {})))
 
 (defn neighbors [[x y] unvisited]
