@@ -8,11 +8,17 @@ with open("./resources/2020/day3.txt", "r") as infile:
             grid[(i, j)] = data[i][j]
 
 
-x, y = (0, 0)
-trees = 0
-while x < len(data) - 1:
-    x += 1
-    y += 3
-    trees += grid[(x, y % cols)] == "#"
+deltas = [(1, 1), (1, 3), (1, 5), (1, 7), (2, 1)]
+results = 1
 
-print(trees)
+for (dx, dy) in deltas:
+    x, y = (0, 0)
+    trees = 0
+    while x < len(data) - 1:
+        x += dx
+        y += dy
+        trees += grid[(x, y % cols)] == "#"
+
+    results *= trees
+
+print(results)
