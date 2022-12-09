@@ -14,22 +14,10 @@
     "D" [(inc x) y]))
 
 (defn move-tail [[x y] [i j]]
-  (let [x-d (- x i)
-        y-d (- y j)]
-    (cond
-      (and (zero? x-d) (= 2 (- y j))) [i (inc j)]
-      (and (zero? x-d) (= -2 (- y j))) [i (dec j)]
-      (and (zero? y-d) (= 2 (- x i))) [(inc i) j]
-      (and (zero? y-d) (= -2 (- x i))) [(dec i) j]
-      ;; diagonal and disconnected
-      (and (not= x i) (not= y j) (> (+ (abs x-d) (abs y-d)) 2))
-      (cond
-        (and (> x i) (> y j)) [(inc i) (inc j)]
-        (and (< x i) (> y j)) [(dec i) (inc j)]
-        (and (> x i) (< y j)) [(inc i) (dec j)]
-        (and (< x i) (< y j)) [(dec i) (dec j)])
-      
-      :else [i j])))
+  (let [xd (- x i)
+        yd (- y j)]
+    (if (and (<= (abs xd) 1) (<= (abs yd) 1)) [i j]
+        [(+ i (Integer/signum xd)) (+ j (Integer/signum yd))])))
 
 (defn move-rope [[head tail] direction]
   (let [head* (move-head head direction)
@@ -45,16 +33,8 @@
       :else (recur (assoc xs pos (move-tail (xs (dec pos)) (xs pos)))
                    (inc pos)))))
 
-(defn part-1 []
-  (loop [state [[0 0] [0 0]] seen #{} m motions]
-    (if (empty? m)
-      (count seen)
-      (recur (move-rope state (first m))
-             (conj seen (last state))
-             (rest m)))))
-
-(defn part-2 []
-  (loop [ropes (vec (repeat 10 [0 0]))
+(defn solution [length]
+  (loop [ropes (vec (repeat length [0 0]))
          seen #{}
          m motions]
     (if (empty? m) (count (conj seen (last ropes)))
