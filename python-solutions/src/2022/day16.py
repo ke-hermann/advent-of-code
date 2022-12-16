@@ -26,14 +26,14 @@ with open("resources/2022/day16.txt", "r") as infile:
 
 
 def traverse(valve, opened, edges, time=0):
-    if time >= 30 or not edges:
-        yield opened | {valve: time}
+    if time >= 26 or not edges:
+        yield {**opened,  **{valve: time}}
 
     else:
         for e in edges:
             yield from traverse(
                 e,
-                opened | {valve: time},
+                {**opened,  **{valve: time}},
                 edges - {e},
                 time=time + distances[(valve, e)],
             )
@@ -43,9 +43,11 @@ results = traverse("AA", {}, non_zero)
 limit = 0
 for l in results:
     total = 0
-    for k, v in l.items():
-        for i in range(v, 30):
-            total += flows[k]
-    if total >= limit:
-        limit = total 
+    elephant = traverse("AA", l, non_zero - set(l.keys()))
+    for e in elephant:
+        for k, v in e.items():
+            for i in range(v, 26):
+                total += flows[k]
+        if total >= limit:
+            limit = total 
 print(limit)
