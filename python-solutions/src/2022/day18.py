@@ -1,4 +1,3 @@
-from os import wait
 import re
 from itertools import product
 from collections import deque
@@ -32,10 +31,10 @@ def surface_area(bubbles):
 
 
 def flood_fill():
-    start = (0, 0 ,0)
+    start = (-1, -1, -1)
     queue = deque([start])
     visited = [start]
-    LOWER = 0
+    LOWER = -1
     UPPER = 25
 
     while queue:
@@ -44,11 +43,11 @@ def flood_fill():
         for p in neighbors(n):
             (a, b, c) = p
             if (
-                LOWER < a < UPPER
-                and LOWER < b < UPPER
-                and LOWER < c < UPPER
-                and p not in visited
-                and p not in cubes
+                LOWER <= a <= UPPER
+                    and LOWER <= b <= UPPER
+                    and LOWER <= c <= UPPER
+                    and p not in visited
+                    and p not in cubes
             ):
                 queue.append((p))
         visited.append(n)
@@ -56,16 +55,12 @@ def flood_fill():
     return visited
 
 
-def filter_bubbles():
-    gaps = flood_fill()
-    bubbles = []
-    for p in product(range(0, 25), repeat=3):
-        if p not in gaps and all(x in cubes for x in neighbors(p)):
-            bubbles.append(p)
-    return bubbles
-
 
 print(surface_area([]))
-b = filter_bubbles()
-b.append((0, 0, 0))
-print(surface_area(b))
+visited = flood_fill()
+count = 0
+for c in cubes:
+    n = neighbors(c)
+    count += sum(x in visited for x in n)
+print(count)
+
