@@ -9,6 +9,7 @@ challenge_input = [
     [[89, 57, 59, 61, 87, 55, 55, 88], "+ 7", 5, 2, 5],
 ]
 
+
 class Monkey:
     def __init__(self, items, op, test, t, f) -> None:
         self.items = items

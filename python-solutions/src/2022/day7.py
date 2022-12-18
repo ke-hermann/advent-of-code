@@ -13,9 +13,9 @@ while data:
 
     if instruction == "$ cd /":
         current_path = ["/"]
-    
+
     elif instruction == "$ ls":
-        while data and  (not data[0].startswith("$")):
+        while data and (not data[0].startswith("$")):
             filename = data.pop(0)
             weight = [int(x) for x in re.findall("\d+", filename)]
             filesystem[tuple(current_path)].extend(weight)
@@ -35,9 +35,9 @@ for d, v in filesystem.items():
     l = len(d)
     subdirs = [s for s in filesystem.keys() if s[:l] == d]
     total_weight = sum([filesystem[s] for s in subdirs])
-    
+
     if total_weight > 100000:
-        continue 
+        continue
     total += total_weight
 
 print(total)

@@ -27,13 +27,13 @@ with open("resources/2022/day16.txt", "r") as infile:
 
 def traverse(valve, opened, edges, time=0):
     if time >= 26 or not edges:
-        yield {**opened,  **{valve: time}}
+        yield {**opened, **{valve: time}}
 
     else:
         for e in edges:
             yield from traverse(
                 e,
-                {**opened,  **{valve: time}},
+                {**opened, **{valve: time}},
                 edges - {e},
                 time=time + distances[(valve, e)],
             )
@@ -49,5 +49,5 @@ for l in results:
             for i in range(v, 26):
                 total += flows[k]
         if total >= limit:
-            limit = total 
+            limit = total
 print(limit)

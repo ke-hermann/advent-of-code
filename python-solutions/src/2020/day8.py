@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from copy import deepcopy
 
+
 @dataclass
 class Virtualmachine:
     instructions: list
