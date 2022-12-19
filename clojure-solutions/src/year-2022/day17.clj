@@ -38,7 +38,7 @@
   (loop [blocks #{[-1 0] [-1 1] [-1 2] [-1 3] [-1 4] [-1 5] [-1 6]}
          [hd & tl :as xs] (rest (cycle shapes))
          cur (spawn (first shapes) blocks)
-         [j & js] (cycle test-input)
+         [j & js] (cycle input)
          count 0]
     (let [lr (if (= j \>) (move-right cur) (move-left cur))
           cur* (if (or (collision? lr blocks) (bounds? lr)) cur lr)
@@ -50,3 +50,4 @@
         (= count 2000) (inc (apply max (map first blocks)))
         cd (recur blocks* tl (spawn hd blocks*) js (inc count))
         :else (recur blocks xs cur** js count)))))
+
