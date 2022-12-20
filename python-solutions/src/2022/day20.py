@@ -16,4 +16,4 @@ for _ in range(10):
 
 r = [x[1] for x in mixed]
 z = r.index(0)
-print(sum([r[(z + i) % l]for i in [1000, 2000, 3000]]))
+print(sum([r[(z + i) % l] for i in [1000, 2000, 3000]]))
