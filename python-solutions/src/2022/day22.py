@@ -5,16 +5,17 @@ from copy import deepcopy
 
 
 def walk_edges(x, y, fcg):
+    print(x, y, fcg)
     if 150 <= x <= 199 and 0 <= y <= 49: # surface 1 
         if fcg == "R":
             return (149, (x - 150) + 50, "U")
         elif  fcg == "D":
-            return (x - 150, y + 100, "D")
+            return (0, y + 100, "D")
         elif fcg == "L":
             return (0, (x - 150) + 50, "D")
     elif 100 <= x <= 149 and 0 <= y <= 49: # surface 2 
         if fcg == "L":
-            return (50 + (x - 100), 0, "R")
+            return (49 - (x - 100), 50, "R")
         elif fcg == "U":
             return (y + 50, 50, "R")
     elif 100 <= x <= 149 and 50 <= y <= 99: # surface 3
@@ -75,31 +76,38 @@ for c in MOVES:
             match facing:
                 case "U":
                     if (x - 1, y) not in board:
-                        cnd = sorted([(i, j) for (i, j) in board.keys() if j == y])[-1]
+                        x_new, y_new, fcg = walk_edges(x, y, facing)
+                        cnd = (x_new, y_new)
                         if board[cnd] == ".":
                             x , y = cnd[0], cnd[1]
+                            facing = fcg
                     elif board[(x - 1, y)] == ".":
                         x -= 1
                 case "D":
                     if (x + 1, y) not in board:
-                        cnd = sorted([(i, j) for (i, j) in board.keys() if j == y])[0]
+                        x_new, y_new, fcg = walk_edges(x, y, facing)
+                        cnd = (x_new, y_new)
                         if board[cnd] == ".":
                             x , y = cnd[0], cnd[1]
+                            facing = fcg
                     elif board[(x + 1, y)] == ".":
                         x += 1
                 case "L":
                     if (x, y - 1) not in board:
-                        cnd = sorted([(i, j) for (i, j) in board.keys() if i == x])[-1]
+                        x_new, y_new, fcg = walk_edges(x, y, facing)
+                        cnd = (x_new, y_new)
                         if board[cnd] == ".":
                             x , y = cnd[0], cnd[1]
+                            facing = fcg
                     elif board[(x, y - 1)] == ".":
                         y -= 1
                 case "R":
                     if (x, y + 1) not in board:
-                        cnd = sorted([(i, j) for (i, j) in board.keys() if i == x])[0]
+                        x_new, y_new, fcg = walk_edges(x, y, facing)
+                        cnd = (x_new, y_new)
                         if board[cnd] == ".":
                             x , y = cnd[0], cnd[1]
-                        
+                            facing = fcg
                     elif board[(x, y + 1)] == ".":
                         y += 1
 
@@ -108,5 +116,3 @@ for c in MOVES:
 x += 1
 y += 1 
 print(x * 1000 + 4 * y + {"R": 0, "D": 1, "L": 2, "U": 3}[facing])
-
-print((149, 50) in board)
