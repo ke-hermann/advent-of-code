@@ -6,23 +6,21 @@
                     (st/split-lines)
                     (index2d)
                     (filter (fn [[k v]] (= v \#)))
-                    (map first)))
+                    (map first)
+                    (set)))
 
 
 (defn north? [elves [x y]]
-  (not-any? #(.contains elves %) [[(dec x) (dec y)] [(dec x) y] [(dec x) (inc y)]]))
+  (not-any? #(contains? elves %) [[(dec x) (dec y)] [(dec x) y] [(dec x) (inc y)]]))
 
 (defn south? [elves [x y]]
-  (not-any? #(.contains elves %) [[(inc x) (inc y)] [(inc x) y] [(inc x) (dec y)]]))
+  (not-any? #(contains? elves %) [[(inc x) (inc y)] [(inc x) y] [(inc x) (dec y)]]))
 
 (defn west? [elves [x y]]
-  (not-any? #(.contains elves %) [[(inc x) (dec y)] [x (dec y)] [(dec x) (dec y)]]))
+  (not-any? #(contains? elves %) [[(inc x) (dec y)] [x (dec y)] [(dec x) (dec y)]]))
 
 (defn east? [elves [x y]]
-  (not-any? #(.contains elves %) [[(inc x) (inc y)] [x (inc y)] [(dec x) (inc y)]]))
-
-(defn isolated? [elves elf]
-  (every? true? (map #(% elves elf) [north? east? south? west?])))
+  (not-any? #(contains? elves %) [[(inc x) (inc y)] [x (inc y)] [(dec x) (inc y)]]))
 
 (defn step [f [x y]]
   (cond
@@ -32,19 +30,20 @@
     (= f west?)  [[x y] [x (dec y)]]))
 
 (defn proposition [elves [f1 f2 f3 f4] elf]
-  (let [[x y] elf]
+  (let [[x y] elf
+        [b1 b2 b3 b4] (map #(% elves elf) [f1 f2 f3 f4])]
     (cond
-      (isolated? elves elf) [[x y] [x y]]
-      (f1 elves elf) (step f1 elf)
-      (f2 elves elf) (step f2 elf)
-      (f3 elves elf) (step f3 elf)
-      (f4 elves elf) (step f4 elf)
+      (every? true? [b1 b2 b3 b4]) [[x y] [x y]]
+      b1 (step f1 elf)
+      b2 (step f2 elf)
+      b3 (step f3 elf)
+      b4 (step f4 elf)
       :else [[x y] [x y]])))
 
 (defn move [elves order]
   (let [ps (map (partial proposition elves order) elves)
         fq (frequencies (map second ps))]
-    (map (fn [[s d]] (if (= 1 (fq d)) d s)) ps )))
+    (set (map (fn [[s d]] (if (= 1 (fq d)) d s)) ps ))))
 
 (defn count-empty [tiles]
   (let [x (apply min (map first tiles))
