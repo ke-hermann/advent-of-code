@@ -23,7 +23,8 @@ def paths(cur, target, seen):
     for n in adjacent[cur]:
         if n not in seen:
             yield from paths(n, target, seen | {cur})
-        
+
+
 with open("../../resources/2019/day6.txt", "r") as infile:
     data = infile.read().splitlines()
     adjacent = defaultdict(list)

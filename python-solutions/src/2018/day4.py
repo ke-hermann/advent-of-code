@@ -12,10 +12,10 @@ with open("../../resources/2018/day4.txt", "r") as infile:
         if "Guard" in s:
             active = re.findall("\d+", s)[-1]
         if "asleep" in s:
-           sleep = int(re.findall("\d+", s)[-1])
+            sleep = int(re.findall("\d+", s)[-1])
         if "wakes up" in s:
-           awake = int(re.findall("\d+", s)[-1])
-           guards.setdefault(active, []).extend(range(sleep, awake))
+            awake = int(re.findall("\d+", s)[-1])
+            guards.setdefault(active, []).extend(range(sleep, awake))
 
 
 g = max(guards.keys(), key=lambda k: len(guards[k]))
