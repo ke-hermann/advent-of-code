@@ -10,6 +10,11 @@
   [xs]
   (apply map vector xs))
 
+(defn adjacent [m [i j]]
+  (remove #{[i j]}
+          (for [x [-1 0 1] y [-1 0 1]]
+            [(+ i x) (+ j y)])))
+
 (defn index2d 
   [matrix]
   (->> (for [x (range (count matrix))
