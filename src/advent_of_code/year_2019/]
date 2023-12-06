@@ -1,0 +1,18 @@
+(ns advent-of-code.year-2019.day12
+  (:require [clojure.string :as str]))
+
+
+(defstruct moon :x :y :z :xv :yv :zv)
+
+(defn parse-line [s]
+  (let [[x y z] (map parse-long (re-seq #"-?\d+" s))]
+       (struct moon x y z 0 0 0)))
+
+(defn gravity [{:keys [x y z]} moons]
+  (let [x* ]))
+
+(def initial (->> (slurp "resources/2019/day12.txt")
+                  (str/split-lines)
+                  (map parse-line)))
+
+
