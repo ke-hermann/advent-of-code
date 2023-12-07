@@ -32,8 +32,8 @@
 
 (defn run []
   (let [probe {:x 0 :y 0 :xv 7 :yv 2}]
-    (->> (for [xv (range 1 66) yv (range -300 400)]
-           (shoot xv yv))
+    (->> (for [xv (range 1 66) yv (range -400 500)]
+           (if (shoot xv yv) [xv yv] nil))
          (remove nil?)
-         (mapcat :yvals)
-         (apply max))))
+         (distinct)
+         (count))))
