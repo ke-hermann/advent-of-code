@@ -8,7 +8,9 @@
                 (map (fn [[k v]] [k (parse-long v)]))
                 (into {})))
 
-(def card-vals (into {} (map vector "23456789ATJQKA" (range))))
+(def cards "J23456789ATQKA" )
+
+(def card-vals (into {} (map vector cards (range))))
 
 (defn five-of-a-kind? [hand]
   (.contains (vals (frequencies hand)) 5))
@@ -42,9 +44,22 @@
     (high-card? hand) 1
     :else 0))
 
+(defn expand [s i]
+  (map #(str/join [(subs s 0 i) % (subs s (inc i))]) cards))
+
+(defn joker-score [hand]
+  (loop [xs [hand] i 0]
+    (if (= i 5)
+      (apply max (map score xs))
+      (recur (if (= \J (nth hand i))
+               (apply conj xs (mapcat #(expand % i) xs))
+               xs)
+             (inc i)))))
+
 (defn compare-hands [hand-1 hand-2]
-  (let [x (score hand-1)
-        y (score hand-2)]
+  (let [x (joker-score hand-1) ;; p1 (score hand-1)
+        y (joker-score hand-2) ;; p2 (score hand-2)
+        ]
     (if (not= x y)
       (compare x y)
       (loop [[[a b] & more] (map vector hand-1 hand-2)]
@@ -52,7 +67,7 @@
           (if (zero? s)
             (recur more) s))))))
 
-(defn part-1 []
+(defn run []
   (->> (sort compare-hands (keys input))
        (map vector (range 1 (inc (count input))))
        (map (fn [[i k]] (* i (input k))))
