@@ -69,6 +69,5 @@
 
 (defn run []
   (->> (sort compare-hands (keys input))
-       (map vector (range 1 (inc (count input))))
-       (map (fn [[i k]] (* i (input k))))
+       (map-indexed (fn [i k] (* (inc i) (input k))))
        (reduce +)))
