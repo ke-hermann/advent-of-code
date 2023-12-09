@@ -1,4 +1,5 @@
 {:deps
  {org.clojure/clojure {:mvn/version "1.11.1"}
-  org.clojure/math.numeric-tower {:mvn/version "0.0.5"}}
+  org.clojure/math.numeric-tower {:mvn/version "0.0.5"}
+  org.clojure/core.match {:mvn/version "1.0.1"}}
  :paths ["src" "target/classes" "resources"]}
