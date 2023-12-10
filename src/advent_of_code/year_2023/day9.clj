@@ -5,8 +5,7 @@
                 (str/split-lines)
                 (map (fn [s] (map parse-long (str/split s #"\s+"))))))
 
-(defn diffs [[a b]]
-  (- b a))
+(defn diffs [[a b]] (- b a))
 
 (defn histories [coll]
   (loop [xs coll result []]
@@ -19,14 +18,6 @@
   (->> (reverse (map last coll))
        (reduce (fn [acc i] (+ i acc)) 0)))
 
-(defn extrapolate-backwards [coll]
-  (->> (reverse (map first coll))
-       (reduce (fn [acc i] (- i acc)) 0)))
-
-(defn part-1 []
-  (->> (map (comp extrapolate histories) input)
-       (reduce +)))
-
-(defn part-2 []
-  (->> (map (comp extrapolate-backwards histories) input)
+(defn solve [xs]
+  (->> (map (comp extrapolate histories) xs)
        (reduce +)))
