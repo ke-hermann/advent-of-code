@@ -1,0 +1,13 @@
+(ns advent-of-code.year-2023.day11
+  (:require [clojure.string :as str]
+            [advent-of-code.utils]))
+
+(def starmap (->> (slurp "resources/2023/day11.txt")
+                  (str/split-lines)
+                  (utils/index2d)))
+
+(def galaxies (->> (filter (fn [[k v]] (= v "#")) starmap)
+                   (into {})))
+
+(def empty-rows (-> (set (map first (keys galaxies)))
+                    (remove (range (count galaxies)))))
