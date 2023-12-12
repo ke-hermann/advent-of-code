@@ -2,3 +2,5 @@
 .lsp/.cache
 /.cpcache/
 .nrepl-port
+.calva/output-window
+.calva/deps.clj.jar
