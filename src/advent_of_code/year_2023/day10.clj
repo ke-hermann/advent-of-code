@@ -31,9 +31,9 @@
       (if (nil? pos*) seen*
           (recur pos* (conj seen pos))))))
 
-(defn enclosed? [max-y loop [x y]]
+(defn enclosed? [max-y pipeloop [x y]]
   (let [points (map vector (repeat x) (range (inc y) (inc max-y)))
-        segments (-> (map pipes (sort-by second (filter (set points) loop)))
+        segments (-> (map pipes (sort-by second (filter (set points) pipeloop)))
                      (str/join)
                      (str/replace #"L-*J|F-*7" "||")
                      (str/replace #"L-*7|F-*J" "|"))]
@@ -42,7 +42,7 @@
 (defn part-1 [] (quot (count (walk-pipes)) 2))
 
 (defn part-2 []
-  (let [loop (conj (walk-pipes) start) 
-        tiles (remove loop (keys grid))
-        max-y (apply max (map second loop))]
-    (count (filter (partial enclosed? max-y loop) tiles))))
+  (let [pipeloop (conj (walk-pipes) start) 
+        tiles (remove pipeloop (keys grid))
+        max-y (apply max (map second pipeloop))]
+    (count (filter (partial enclosed? max-y pipeloop) tiles))))

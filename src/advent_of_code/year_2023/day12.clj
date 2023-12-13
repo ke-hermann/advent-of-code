@@ -28,5 +28,25 @@
     candidates
     (count (filter (partial valid? pattern)  candidates))))
 
+
 (defn part-1 []
   (reduce + (map valid-strings input)))
+
+(defn score [curr springs groups]
+  (cond
+    (empty? groups) [1]
+    (empty? springs) [0]  
+    :else
+    (let [[hd & tl] springs
+          [g & gs] groups
+          match (and (= (take g curr) (repeat g \#)) (= hd \.) (= \. (nth curr g \.)))
+          groups* (if match gs groups)]
+      (if (= hd \?)
+        (mapcat #(score (cons % curr) tl groups*) "#.")
+        (score (cons hd curr)  tl groups*)))))
+
+(defn valid-strings-2 [{:keys [string pattern]}]
+  (reduce + (score '() string pattern)))
+
+(defn foo []
+  (reduce + (map valid-strings-2 input)))
