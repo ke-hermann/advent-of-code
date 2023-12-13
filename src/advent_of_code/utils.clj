@@ -43,6 +43,10 @@
          [[x y] (str (get (get matrix x) y ))])
        (into {})))
 
+(defn map-to-2d [m]
+  (let [row-count (map first (keys m))]
+    (map (range row-count))))
+
 (defn pprint-map [m]
   (let [x-min (apply min (map first (keys m)))
         x-max (inc (apply max (map first (keys m))))
