@@ -1,5 +1,6 @@
 (ns advent-of-code.year-2019.day12
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str])
+  (:require [clojure.math.numeric-tower :refer [lcm]]))
 
 
 (defstruct moon :x :y :z :xv :yv :zv)
@@ -27,7 +28,12 @@
       (update :y #(+ % yv))
       (update :z #(+ % zv))))
 
-(defn simulate [moons _]
+
+(defn simulate-1 [moons _]
+  (->> (map (partial gravity moons) moons)
+       (map velocity)))
+
+(defn simulate-2 [moons]
   (->> (map (partial gravity moons) moons)
        (map velocity)))
 
@@ -45,6 +51,17 @@
                   (map parse-line)))
 
 (defn part-1 []
-  (->> (reduce simulate initial (range 1000))
+  (->> (reduce simulate-1 initial (range 1000))
        (map total-energy)
        (reduce +)))
+
+(defn part-2 []
+  (->> (for [k [:x :y :z]]
+         (loop [moons initial seen [] i 0]
+           (if (.contains seen (map k  moons))
+             [k i]
+             (recur (simulate-2  moons)
+                    (conj seen (map k moons))
+                    (inc i)))))
+       (map second)
+       (reduce lcm)))

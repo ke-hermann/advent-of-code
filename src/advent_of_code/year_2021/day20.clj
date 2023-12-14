@@ -27,14 +27,10 @@
     (str (nth algorithm (decimal xs)))))
 
 (defn update-image [image]
-  (let [min-x (apply min (map first (keys image)))
-        max-x (apply max (map first (keys image)))
-        min-y (apply min (map second (keys image)))
-        max-y (apply max (map second (keys image)))]
-    (->> (for [x (range -150 150)
-               y (range -150 150)]
-           [[x y] (enhance image [x y])])
-         (into {}))))
+  (->> (for [x (range -150 150)
+             y (range -150 150)]
+         [[x y] (enhance image [x y])])
+       (into {})))
 
 (defn part-1 []
   (->> input
