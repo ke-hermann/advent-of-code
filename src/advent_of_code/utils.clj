@@ -1,4 +1,4 @@
-(ns utils
+(ns advent-of-code.utils 
   (:require [clojure.string :as s]))
 
 (defn str-to-ints

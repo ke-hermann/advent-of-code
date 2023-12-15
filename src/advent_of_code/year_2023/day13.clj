@@ -16,6 +16,7 @@
   (let [i (min (count left) (count right))
         xs (reverse (take-last i left))
         ys (take i right)]
+    ;;(= 0 (reduce + (map row-diff (map vector xs ys))))
     (= 1 (reduce + (map row-diff (map vector xs ys))))))
 
 (defn split [mirrors i]
@@ -30,18 +31,7 @@
     (cond
       (not-empty horizontal) (* 100 (first horizontal))
       (not-empty vertical) (first vertical)
-      :else 0)))
+      :else (throw (Exception. "invalid result")))))
 
-(defn perms [mirrors]
-  (let [xs (mapv #(vec (seq %)) mirrors)]
-    (for [x (range (count xs))
-          y (range (count (nth xs 0)))]
-      (->> (assoc-in xs [x y] (if (= \# (get-in xs [x y])) \. \#))
-           (mapv str/join)))))
-
-(defn new-score [mirrors]
-  (let [xs (map search (perms mirrors))]
-    xs))
-
-(defn part-1 []
+(defn solve []
   (reduce + (map search input)))
