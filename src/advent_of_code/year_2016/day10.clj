@@ -12,14 +12,14 @@
 
 (def input (->> (slurp "resources/2016/day10.txt")
                 (str/split-lines)
-                (map parse-line)))
+                (mapv parse-line)))
 
 (defn conj-maybe [coll x]
   (if (nil? coll) [x] (conj coll x)))
 
 (defn distribute [bots giver receiver-low receiver-high]
-  (let [low (apply min (giver :chips))
-        high (apply max (giver :chips))]
+  (let [low (apply min (bots giver))
+        high (apply max (bots giver))]
     (-> (assoc bots giver [])
         (update receiver-low #(conj-maybe % low))
         (update receiver-high #(conj-maybe % high)))))
@@ -28,7 +28,7 @@
 (defn process-bots [bots line]
   (match line
          ["value" v "goes" "to" "bot" k]
-         [(update bots k #(conj % v)) :done]
+         [(update bots k #(conj-maybe % v)) :done]
 
          ["bot" k "gives" "low" "to" "bot" l "and" "high" "to" "bot" h]
          (if (= 2 (count (bots k)))
@@ -56,8 +56,14 @@
       bots
       (let [[hd & tl] instructions
             [bots* status] (process-bots bots hd)
-            instructions* (if (= status :done) tl (conj tl hd))]
+            instructions* (if (= status :done) tl (conj (vec tl) hd))]
         (recur bots* instructions*)))))
 
 (defn part-1 []
   (simulate))
+
+(defn part-2 []
+  (let [bots (simulate)]
+    (reduce * (concat (bots "output-0" )
+                      (bots "output-1")
+                      (bots "output-2")))))
