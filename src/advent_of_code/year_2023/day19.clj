@@ -51,25 +51,28 @@
        (mapcat vals)
        (reduce +)))
 
-(defn boundary [{:keys [value f]}]
-  (if (= f <) (dec value) value))
+(defn boundary [state {:keys [category value f]}]
+  (if (= f <)
+    [(assoc state (keyword (str category "h")) (dec value))
+     (assoc state (keyword (str category "l")) value)]
+    [(assoc state (keyword (str category "l")) (inc value))
+     (assoc state (keyword (str category "h")) value)]))
 
-(defn lookup [a bounds]
-  (let [i (.indexOf bounds a)]
-    (if (zero? i) a (- a (nth bounds (dec i))))))
+(defn split-ranges [[state s]]
+  (loop [states [] m state [hd & tl] (workflows s)]
+    (if (string? hd) (conj states [m hd])
+        (let [[success fail] (boundary m hd)]
+          (recur (conj states [success (hd :destination)])
+                 fail
+                 tl)))))
 
-(defn find-intervals []
-  (let [xs (mapcat butlast (vals workflows))
-        a-bounds (sort (concat (map boundary (filter #(= "a" (% :category)) xs)) [4000]))
-        s-bounds (sort (concat (map boundary (filter #(= "s" (% :category)) xs)) [4000]))
-        m-bounds (sort (concat (map boundary (filter #(= "m" (% :category)) xs)) [4000]))
-        x-bounds (sort (concat (map boundary (filter #(= "x" (% :category)) xs)) [4000]))
-        perms (->> (for [a a-bounds s s-bounds m m-bounds x x-bounds]
-                     {"a" a "s" s "x" x "m" m})
-                   (filter accepted?))]
-    (reduce + (for [p perms]
-                (let [[a s x m] (vals p)]
-                  (* (lookup a a-bounds)
-                     (lookup s s-bounds)
-                     (lookup x x-bounds)
-                     (lookup m m-bounds)))))))
+(defn score [{:keys [xl xh al ah sl sh ml mh]}]
+  (* (- xh (dec xl)) (- ah (dec al)) (- sh (dec sl)) (- mh (dec ml))))
+
+(defn part-2 []
+  (loop [queue [[{:xl 1 :xh 4000 :al 1 :ah 4000 :sl 1 :sh 4000 :ml 1 :mh 4000} "in"]] finished #{}]
+    (let [valid (map first (filter (fn [[m wf]] (= wf "A")) queue))
+          queue* (remove (fn [[m wf]] (or (= wf "A") (= wf "R"))) queue)]
+      (if (empty? queue)
+        (reduce + (map score finished))
+        (recur (mapcat split-ranges queue*) (apply conj finished valid))))))
