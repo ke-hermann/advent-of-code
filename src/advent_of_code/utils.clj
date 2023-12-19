@@ -57,8 +57,8 @@
         (print (get m [i j] " ")))
       (println))))
 
-(defn neighbors [[x y] unvisited]
-  (filter unvisited [[(inc x) y] [x (inc y)] [(dec x) y] [x (dec y)]]))
+(defn neighbors [[x y]]
+  [[(inc x) y] [x (inc y)] [(dec x) y] [x (dec y)]])
 
 (defn tentative [g grid candidate current]
   (let [dist (+ current (grid candidate))]
