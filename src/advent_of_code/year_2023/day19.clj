@@ -50,3 +50,26 @@
   (->> (filter accepted? parts)
        (mapcat vals)
        (reduce +)))
+
+(defn boundary [{:keys [value f]}]
+  (if (= f <) (dec value) value))
+
+(defn lookup [a bounds]
+  (let [i (.indexOf bounds a)]
+    (if (zero? i) a (- a (nth bounds (dec i))))))
+
+(defn find-intervals []
+  (let [xs (mapcat butlast (vals workflows))
+        a-bounds (sort (concat (map boundary (filter #(= "a" (% :category)) xs)) [4000]))
+        s-bounds (sort (concat (map boundary (filter #(= "s" (% :category)) xs)) [4000]))
+        m-bounds (sort (concat (map boundary (filter #(= "m" (% :category)) xs)) [4000]))
+        x-bounds (sort (concat (map boundary (filter #(= "x" (% :category)) xs)) [4000]))
+        perms (->> (for [a a-bounds s s-bounds m m-bounds x x-bounds]
+                     {"a" a "s" s "x" x "m" m})
+                   (filter accepted?))]
+    (reduce + (for [p perms]
+                (let [[a s x m] (vals p)]
+                  (* (lookup a a-bounds)
+                     (lookup s s-bounds)
+                     (lookup x x-bounds)
+                     (lookup m m-bounds)))))))
