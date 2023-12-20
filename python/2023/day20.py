@@ -1,5 +1,5 @@
-from pprint import pprint
 from collections import deque
+import graphviz
 
 
 class Node:
@@ -21,6 +21,10 @@ class Node:
     def send(self, sender, pulse):
         global low_c
         global high_c
+        global iteration
+
+        if self.name == "dh" and not all(x == 1 for x in self.inputs.values()):
+            print(iteration)
 
         if pulse == 1:
             high_c += 1
@@ -70,23 +74,30 @@ with open("./day20.txt", "r") as infile:
             n = Node(l, ts, rest)
             nodes[rest] = n
 
+    G = graphviz.Digraph()
     # prepopulate conj and end nodes
     for n in list(nodes.values()):
+        G.node(n.name, label=f"{n.type}:{n.name}")
         for c in n.children:
+            G.edge(n.name, c)
             if c not in nodes:
                 nodes[c] = Node("untyped", [], c)
             if nodes[c].type == "conj":
                 nodes[c].inputs[n.name] = 0
 
+    # G.render("doctest-output/round-table.gv", view=True)
     low_c = 0
     high_c = 0
+    iteration = 0
 
-    for _ in range(1000):
+    while iteration < 20000:
         queue = deque([("button", 0, "broadcaster")])
         while queue:
             sender, pulse, cur = queue.popleft()
             xs = list(nodes[cur].send(sender, pulse))
             if xs:
                 queue.extend(xs)
+
+        iteration += 1
 
     print(low_c * high_c)
