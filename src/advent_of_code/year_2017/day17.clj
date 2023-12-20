@@ -9,7 +9,7 @@
                 (str/split-lines)
                 (index2d)))
 
-(def start "hijkl")
+(def start "gdjjyniy")
 
 (defn md5 [^String s]
   (let [algorithm (MessageDigest/getInstance "MD5")
@@ -22,10 +22,10 @@
 (defn open? [[_ c]]
   (str/includes? "bcedf" (str c)))
 
-(defn move-up [steps x y] [(str steps "U") [(- x 2) y]])
-(defn move-down [steps x y] [(str steps "D") [(+ x 2) y]])
-(defn move-left [steps x y] [(str steps "L") [x (- y 2)]])
-(defn move-right [steps x y] [(str steps "R") [x (+ y 2)]])
+(defn move-up [steps x y] [(str/join [steps "U"]) [(- x 2) y]])
+(defn move-down [steps x y] [(str/join [steps "D"]) [(+ x 2) y]])
+(defn move-left [steps x y] [(str/join [steps "L"]) [x (- y 2)]])
+(defn move-right [steps x y] [(str/join [steps "R"]) [x (+ y 2)]])
 
 (defn move [[x y] steps direction]
   (case direction
@@ -34,18 +34,24 @@
     :down (move-down steps x y)
     :right (move-right steps x y)))
 
+(def longest (atom []))
+
 (defn step [[s pos]]
   (let [hash (md5 s)
         xs (map vector (neighbors pos) hash)
         ys (map #(and (open? %) (door? %)) xs)
         zs (zipmap [:up :down :left :right] ys)
         open (map first (filter (fn [[_ b]] (true? b)) zs))]
-    (if (empty? open)
-      nil
-      (map (partial move pos s) open))))
+    (cond
+      (empty? open) []
+      (= pos [7 7]) (do (swap! longest #(conj % (- (count s) (count start)))) [])
+      :else (map (partial move pos s) open))))
 
 (defn solve []
   (loop [xs [[start [1 1]]] i 0]
-    (if (some (fn [[s pos]] (= "V" (input pos))) xs)
-      i
-      (recur (mapcat step xs) (inc i)))))
+    (cond
+      (empty? xs) i
+      (> i 1000) (throw (Exception. "invalid state"))
+      :else (recur (mapcat step xs) (inc i)))))
+
+;; possible answers [577, 578, 580, 581]
