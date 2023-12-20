@@ -58,7 +58,7 @@
       (println))))
 
 (defn neighbors [[x y]]
-  [[(inc x) y] [x (inc y)] [(dec x) y] [x (dec y)]])
+  [[(dec x) y] [(inc x) y] [x (dec y)] [x (inc y)]])
 
 (defn tentative [g grid candidate current]
   (let [dist (+ current (grid candidate))]
