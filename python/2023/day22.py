@@ -1,15 +1,18 @@
 import re
 
 
-def simulate(bricks: list, floor: set):
+def simulate(bricks: list, floor: set, count=False):
+    global fall_count
     fallen = []
     while bricks:
         b = bricks.pop(0)
+        start_pos = b
         while not any(z == 1 for (_, _, z) in b) and not any(
             (x, y, z - 1) in floor for (x, y, z) in b
         ):
             b = [(x, y, z - 1) for (x, y, z) in b]
-
+        if count:
+            fall_count += b != start_pos
         fallen.append(b)
         floor.update(b)
     return fallen
@@ -18,8 +21,8 @@ def simulate(bricks: list, floor: set):
 def test_safety(bricks, b):
     i = bricks.index(b)
     floor = set([x for brick in bricks[:i] for x in brick if x not in b])
-    xs = [brick for brick in bricks if brick != b]
-    result = simulate(xs[:], floor)
+    xs = bricks[i + 1 :]
+    result = simulate(xs[:], floor, count=True)
     return result == xs
 
 
@@ -42,7 +45,9 @@ with open("./day22.in", "r") as infile:
         bricks.append(set(coords))
 
     safe = 0
+    fall_count = 0
+
     fallen = simulate(bricks, set())
     for b in fallen:
         safe += test_safety(fallen[:], b)
-    print(safe)
+    print(safe, fall_count)
