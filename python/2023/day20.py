@@ -85,11 +85,12 @@ with open("./day20.txt", "r") as infile:
             if nodes[c].type == "conj":
                 nodes[c].inputs[n.name] = 0
 
-    # G.render("doctest-output/round-table.gv", view=True)
+    # G.render("./graph.gv", view=True)
     low_c = 0
     high_c = 0
     iteration = 0
 
+    # while iteration < 1000 ;; part 1
     while iteration < 20000:
         queue = deque([("button", 0, "broadcaster")])
         while queue:
@@ -100,4 +101,4 @@ with open("./day20.txt", "r") as infile:
 
         iteration += 1
 
-    print(low_c * high_c)
+    # print(low_c * high_c) ;; part 1

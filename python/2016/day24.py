@@ -20,4 +20,3 @@ with open("./day24.txt", "r") as infile:
                         G.add_edge((i, j), (m, n))
                 except Exception:
                     pass
-
