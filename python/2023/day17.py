@@ -1,4 +1,4 @@
-import networkx as nx
+import rustworkx as nx
 from pprint import pprint
 
 UP = 0

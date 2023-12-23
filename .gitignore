@@ -5,3 +5,8 @@
 .calva/output-window
 .calva/deps.clj.jar
 python/2016/VENV
+clojure/.calva
+clojure/.clj-kondo/.cache/v1
+clojure/.cpcache
+clojure/.lsp/.cache
+rust_solutions

@@ -6,7 +6,7 @@
                 (str/split-lines)
                 (index2d)))
 
-(def goal [140 139])
+(def goal [22 21])
 
 (defn open? [[x y] [i j :as p]]
   (cond
@@ -40,6 +40,6 @@
     (let [finished (filter target? states)
           states* (remove target? states)]
       (if (empty? states)
-        (map #(count (second %)) results)
+        (apply max (map #(count (second %)) results))
         (recur (mapcat walk states*)
                (apply conj results finished))))))
