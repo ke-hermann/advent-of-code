@@ -10,3 +10,4 @@ clojure/.clj-kondo/.cache/v1
 clojure/.cpcache
 clojure/.lsp/.cache
 rust_solutions
+python/VENV
