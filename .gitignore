@@ -12,3 +12,4 @@ clojure/.lsp/.cache
 rust_solutions
 python/VENV
 python/2019/__pycache__
+python/2018/__pycache__
