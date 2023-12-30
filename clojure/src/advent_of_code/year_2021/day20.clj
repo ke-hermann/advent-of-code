@@ -1,6 +1,6 @@
 (ns advent-of-code.year-2021.day20
   (:require [clojure.string :as str]
-            [utils :refer [index2d pprint-map]]))
+            [advent-of-code.utils :refer [index2d pprint-map]]))
 
 (def algorithm
   (str/trim (slurp "resources/2021/day20algo.txt")))
@@ -27,8 +27,8 @@
     (str (nth algorithm (decimal xs)))))
 
 (defn update-image [image]
-  (->> (for [x (range -150 150)
-             y (range -150 150)]
+  (->> (for [x (range -300 300)
+             y (range -300 300)]
          [[x y] (enhance image [x y])])
        (into {})))
 
