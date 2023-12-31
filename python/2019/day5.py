@@ -1,4 +1,4 @@
-from vm import VirtualMachine
+from virtualmachine import VirtualMachine
 
 
 with open("resources/day5.txt", "r") as infile:

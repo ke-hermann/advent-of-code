@@ -1,4 +1,4 @@
-from vm import VirtualMachine
+from virtualmachine import VirtualMachine
 
 with open("day9.txt", "r") as infile:
     data = infile.read().strip()
