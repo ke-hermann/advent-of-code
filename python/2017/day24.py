@@ -1,3 +1,10 @@
+def calc_score(seq):
+    total = 0
+    for i in range(len(seq) - 1):
+        total += seq[i] + seq[i + 1]
+    return total
+
+
 def bridge(seq: list, ports: set):
     if not ports:
         yield seq
@@ -12,10 +19,7 @@ def bridge(seq: list, ports: set):
             no_matches = False
 
     if no_matches:
-        total = 0
-        for i in range(len(seq) - 1):
-            total += seq[i] + seq[i + 1]
-        yield total
+        yield seq
 
 
 with open("./day24.txt", "r") as infile:
@@ -26,13 +30,15 @@ with open("./day24.txt", "r") as infile:
         a, b = line.split("/")
         ports.append((int(a), int(b)))
 
-    score = 0
     starts = [p for p in ports if p[0] == 0 or p[1] == 0]
+    xs = []
     for s in starts:
         ports = [p for p in ports if p != s]
         start = [s[0], s[1]] if s[0] == 0 else [s[1], s[0]]
         results = bridge(start, set(ports[:]))
-        m = max(results)
-        score = m if m > score else m
+        xs.extend(list(results))
 
-    print(score)
+    xs.sort(key=lambda x: (len(x), calc_score(x)))
+    highscore = calc_score(xs[-1])
+    print(xs[-1])
+    print(highscore)

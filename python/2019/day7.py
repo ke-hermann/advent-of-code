@@ -1,52 +1,52 @@
 from vm import VirtualMachine
 from itertools import permutations
 
-PROGRAM = [
-    3,
-    26,
-    1001,
-    26,
-    -4,
-    26,
-    3,
-    27,
-    1002,
-    27,
-    2,
-    27,
-    1,
-    27,
-    26,
-    27,
-    4,
-    27,
-    1001,
-    28,
-    -1,
-    28,
-    1005,
-    28,
-    6,
-    99,
-    0,
-    0,
-    5,
-]
+with open("day7.txt", "r") as infile:
+    data = infile.read().strip()
+    PROGRAM = [int(x) for x in data.split(",")]
 
 
 def run_amplifiers(perm):
     signal = 0
     for p in perm:
         amplifier = VirtualMachine(PROGRAM)
-        amplifier.input.append(signal)
         amplifier.input.append(p)
+        amplifier.input.append(signal)
         amplifier.run()
         signal = amplifier.output[0]
 
     return signal
 
 
-perms = permutations(range(5, 10), 5)
-result = max(perms, key=run_amplifiers)
-max_signal = run_amplifiers(result)
-print(max_signal)
+def chain_amplifiers(perm):
+    amps = []
+    signal = 0
+
+    for p in perm:
+        amplifier = VirtualMachine(PROGRAM)
+        amplifier.input.append(p)
+        amps.append(amplifier)
+
+    while any(amp.halt == False for amp in amps):
+        cur = amps.pop(0)
+        cur.input.append(signal)
+        cur.run_until_out()
+        if len(cur.output) == 0:
+            break
+        else:
+            signal = cur.output.pop()
+            amps.append(cur)
+
+    return signal
+
+
+perms1 = permutations(range(5), 5)
+perms2 = permutations(range(5, 10), 5)
+
+result_p1 = max(perms1, key=run_amplifiers)
+max_signal = run_amplifiers(result_p1)
+print("part1:", max_signal)
+
+result_p2 = max(perms2, key=chain_amplifiers)
+max_signal_p2 = chain_amplifiers(result_p2)
+print("part2:", max_signal_p2)
