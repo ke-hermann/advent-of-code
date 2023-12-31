@@ -47,7 +47,6 @@ class VirtualMachine:
             case 4:
                 v = self.program[a]
                 self.output.append(v)
-                print(self.output)
                 self.position += 2
             case 5:
                 if k1 != 0:
@@ -77,4 +76,8 @@ class VirtualMachine:
 
     def run(self):
         while not self.halt:
+            self.process()
+
+    def run_until_out(self):
+        while not self.output:
             self.process()

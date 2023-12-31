@@ -9,3 +9,4 @@ with open("resources/day5.txt", "r") as infile:
     vm = VirtualMachine(pg)
     vm.input.append(5)
     vm.run()
+    print(vm.output)
