@@ -48,53 +48,52 @@ class VirtualMachine:
         _ = self.program[i + 2]
         c = self.program[i + 3]
 
-        match instruction:
-            case 1:
-                p = c + self.relative_base if op_str[0] == "2" else c
-                self.program[p] = k1 + k2
-                self.position += 4
-            case 2:
-                p = c + self.relative_base if op_str[0] == "2" else c
-                self.program[p] = k1 * k2
-                self.position += 4
-            case 3:
-                v = self.input.pop(0)
-                p = a + self.relative_base if op_str[2] == "2" else a
-                self.program[p] = v
-                self.position += 2
-            case 4:
-                self.output.append(k1)
-                self.position += 2
-            case 5:
-                if k1 != 0:
-                    self.position = k2
-                else:
-                    self.position += 3
-            case 6:
-                if k1 == 0:
-                    self.position = k2
-                else:
-                    self.position += 3
-            case 7:
-                p = c + self.relative_base if op_str[0] == "2" else c
-                if k1 < k2:
-                    self.program[p] = 1
-                else:
-                    self.program[p] = 0
-                self.position += 4
-            case 8:
-                p = c + self.relative_base if op_str[0] == "2" else c
-                if k1 == k2:
-                    self.program[p] = 1
-                else:
-                    self.program[p] = 0
-                self.position += 4
-            case 9:
-                self.relative_base += k1
-                self.position += 2
+        if instruction == 1:
+            p = c + self.relative_base if op_str[0] == "2" else c
+            self.program[p] = k1 + k2
+            self.position += 4
+        elif instruction == 2:
+            p = c + self.relative_base if op_str[0] == "2" else c
+            self.program[p] = k1 * k2
+            self.position += 4
+        elif instruction == 3:
+            v = self.input.pop(0)
+            p = a + self.relative_base if op_str[2] == "2" else a
+            self.program[p] = v
+            self.position += 2
+        elif instruction == 4:
+            self.output.append(k1)
+            self.position += 2
+        elif instruction == 5:
+            if k1 != 0:
+                self.position = k2
+            else:
+                self.position += 3
+        elif instruction == 6:
+            if k1 == 0:
+                self.position = k2
+            else:
+                self.position += 3
+        elif instruction == 7:
+            p = c + self.relative_base if op_str[0] == "2" else c
+            if k1 < k2:
+                self.program[p] = 1
+            else:
+                self.program[p] = 0
+            self.position += 4
+        elif instruction == 8:
+            p = c + self.relative_base if op_str[0] == "2" else c
+            if k1 == k2:
+                self.program[p] = 1
+            else:
+                self.program[p] = 0
+            self.position += 4
+        elif instruction == 9:
+            self.relative_base += k1
+            self.position += 2
 
-            case 99:
-                self.halt = True
+        elif instruction == 99:
+            self.halt = True
 
     def run(self):
         while not self.halt:

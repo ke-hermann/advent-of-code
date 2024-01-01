@@ -39,14 +39,39 @@ def part1():
 
 
 def part2():
+    # part 2 manual solution
+    # L10,L6,R10,R6,R8,R8,L6,R8,L10,L6,
+    # R10,L10,R8,R8,L10,R6,R8,R8,L6,R8,
+    # L10,R8,R8,L10,R6,R8,R8,L6,R8,L10,
+    # L6,R10,L10,R8,R8,L10,R6,R8,R8,L6,
+    # R8
+
+    # A: L10,L6,R10
+    # B: R6,R8,R8,L6,R8
+    # C: L10,R8,R8,L10
+
+    # part 2 path substituted
+    # A,B,A,C,B,C,B,A,C,B
+
     with open("./day17.txt", "r") as infile:
         data = infile.read().strip().split(",")
         program = [int(x) for x in data]
+        program[0] = 2
         vm = VirtualMachine(program)
-        print(ord("\n"))
+        solution = [
+            "A,B,A,C,B,C,B,A,C,B\n",
+            "L,10,L,6,R,10\n",
+            "R,6,R,8,R,8,L,6,R,8\n",
+            "L,10,R,8,R,8,L,10\n",
+            "n\n",
+        ]
+        solution = [ord(c) for l in solution for c in l]
+        vm.input = solution
+        vm.run()
+        return vm.output[-1]
 
 
 p1_result = part1()
+p2_result = part2()
 print("part1:", p1_result)
-
-part2()
+print("part2:", p2_result)
