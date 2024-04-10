@@ -12,15 +12,15 @@ with open("./day6.txt", "r") as infile:
         for i in range(x1, x2 + 1):
             for j in range(y1, y2 + 1):
                 if "turn on" in line:
-                    d[(i, j)] = 1
+                    d[(i, j)] += 1
                 elif "turn off" in line:
-                    d[(i, j)] = 0
+                    d[(i, j)] = 0 if d[(i, j)] <= 1 else d[(i, j)] - 1
                 elif "toggle" in line:
-                    d[(i, j)] = 0 if d[(i, j)] == 1 else 1
+                    d[(i, j)] += 2
 
 
     total = 0
     for v in d.values():
-        total += v == 1
+        total += v
     print(total)
                     
