@@ -42,21 +42,3 @@ def print_grid(grid_dict, empty_char='.', padding=1, invert_y=False):
             # Pad the string to ensure column alignment
             row_str += val.ljust(cell_width)
         print(row_str)
-
-# --- Example Usage ---
-
-# A sample dictionary representing a few items on a map
-coordinates = {
-    (0, 0): "S",    # Start
-    (2, 0): "#",    # Wall
-    (1, 1): "A",    # Object
-    (2, 2): "100",  # A wide number
-    (0, 3): "E",    # End
-    (3, 1): "#"
-}
-
-print("--- Standard Layout (y=0 at top) ---")
-print_grid(coordinates)
-
-print("\n--- Cartesian Layout (y=0 at bottom) ---")
-print_grid(coordinates, invert_y=True, empty_char="·")
